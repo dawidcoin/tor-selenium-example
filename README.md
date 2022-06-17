@@ -1,10 +1,10 @@
 ### Tor Selenium example
 
-Example of using Selenium with Tor Browser.
+Example of using Selenium with Tor Browser (firefox driver).
 
 #### Install
 
-Install Tor using instructions from here https://support.torproject.org/apt/ (you can simply use `apt install tor` but it's not recommended by tor project website). Enable control port and password-protect it:
+Install Tor using instructions from here https://support.torproject.org/apt/tor-deb-repo/ (you can simply use `apt install tor` but it's not recommended by [tor project website](https://support.torproject.org/apt/)). Enable control port and password-protect it:
 
 ```commandline
 torpass=$(tor --hash-password "my-tor-password")
@@ -28,6 +28,12 @@ create_venv
 
 #### Usage
 
-TODO
+Start script with:
 
-Make sure that Tor service is running.
+```commandline
+python3 firefox.py
+```
+
+This should open browser on [tor project website](http://check.torproject.org) displaying your ip (you have one second to memorize it :D). Then browser will restart and the same page will open (this time with different IP hopefully).
+
+Note: Make sure that Tor service is running.
