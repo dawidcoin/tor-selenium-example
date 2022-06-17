@@ -1,0 +1,7 @@
+# virtual environment
+venv
+# pycherm
+.idea
+
+config.yaml
+geckodriver.log
