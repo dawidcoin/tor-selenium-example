@@ -6,9 +6,8 @@ from yaml import full_load
 from typing import Dict
 from time import sleep
 
-FIREFOX_PROFILE_PATH = '/usr/local/bin/Browser/TorBrowser/Data/Browser/profile.default'
-FIREFOX_BINARY_PATH = '/usr/local/bin/Browser/firefox'
 CONFIG_FILE = "config.yaml"
+URL = "http://check.torproject.org"
 
 
 def load_yaml_config() -> Dict:
@@ -33,6 +32,12 @@ def get_firefox_options(firefox_profile_path: str, firefox_binary_path: str) -> 
     return options
 
 
+def get_driver(firefox_profile_path: str, firefox_binary_path: str) -> Firefox:
+    return Firefox(
+        options=get_firefox_options(firefox_profile_path, firefox_binary_path)
+    )
+
+
 def tor_request_new_circuit(password: str) -> None:
     with Controller.from_port(port=9051) as controller:
         controller.authenticate(password=password)
@@ -41,12 +46,12 @@ def tor_request_new_circuit(password: str) -> None:
 
 if __name__ == "__main__":
     config = load_yaml_config()
-    driver = Firefox(
-        options=get_firefox_options(config['firefox_profile_path'], config['firefox_binary_path'])
-    )
-    driver.get("http://check.torproject.org")
+    driver = get_driver(config['firefox_profile_path'], config['firefox_binary_path'])
+    driver.get(URL)
     print("Requesting new circuit")
     tor_request_new_circuit(config['password'])
-    print("Wait 5 seconds...")
-    sleep(5)
-    driver.get("http://check.torproject.org")
+    sleep(1)  # check the ip on the browser fast :)
+    print("Reopening driver")
+    driver.close()
+    driver = get_driver(config['firefox_profile_path'], config['firefox_binary_path'])
+    driver.get(URL)
